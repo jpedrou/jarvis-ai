@@ -9,7 +9,7 @@ async def speak_jarvis(text):
     try:
         voice = "pt-BR-AntonioNeural"
         
-        communicate = edge_tts.Communicate(text, voice, rate = "+20%")
+        communicate = edge_tts.Communicate(text, voice, rate = "+28%")
         await communicate.save("temp.mp3")
 
         data, samplerate = sf.read("temp.mp3")
@@ -26,7 +26,7 @@ async def speak_jarvis(text):
         pygame.mixer.music.play()
 
         while pygame.mixer.music.get_busy():
-            await asyncio.sleep(0.1)
+            await asyncio.sleep(0.01)
             
         pygame.mixer.quit()
         os.remove('temp.mp3')
