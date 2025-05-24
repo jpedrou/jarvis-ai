@@ -22,7 +22,23 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 client = genai.Client(api_key=GOOGLE_API_KEY)
 
 
-async def start_app(initialize_web_socket = True):
+def kill_uvicorn_on_port(port=8000):
+    try:
+        output = subprocess.check_output(["lsof", "-i", f":{port}"]).decode()
+        lines = output.strip().split("\n")[1:]
+        for line in lines:
+            parts = line.split()
+            if len(parts) > 1 and "uvicorn" in parts[0].lower():
+                pid = int(parts[1])
+                os.killpg(os.getpgid(pid), signal.SIGTERM)
+                print(f"Processo Uvicorn {pid} na porta {port} finalizado.")
+                return
+        print(f"Nenhum processo uvicorn encontrado na porta {port}.")
+    except subprocess.CalledProcessError:
+        print(f"Nenhum processo escutando na porta {port}.")
+
+
+async def start_app(initialize_web_socket=True):
     if initialize_web_socket:
         ws_process = threading.Thread(target=start_ws_server, daemon=True)
         ws_process.start()
@@ -61,7 +77,7 @@ async def start_app(initialize_web_socket = True):
                 for name, image_representation in registers:
                     dist = np.linalg.norm(face - image_representation)
                     if dist < 0.6:
-                        await say(f"Acesso autorizado. Olá {name}")
+                        await say(f"Acesso autorizado. Olá, {name}")
                         found = True
                         break
                 if found:
@@ -137,13 +153,19 @@ async def start_app(initialize_web_socket = True):
             await say("Reiniciando sistema")
             await asyncio.sleep(2)
             os.killpg(os.getpgid(browser_process.pid), signal.SIGTERM)
-            start_app()
+            kill_uvicorn_on_port()
+            await asyncio.sleep(1)
+            await start_app()
 
         instructions = (
-            "Responda como Jarvis, o assistente de inteligência artificial do Homem de Ferro: breve, direto, humano e com um tom natural e amigável, como um assistente pessoal. "
-            "Evite usar tópicos ou listas. "
-            "Sempre finalize perguntando se há mais alguma dúvida ou se posso ajudar em algo mais."
-            f"Considere que, se {name} for um nome feminino, responda no gênero feminino; caso contrário, use o masculino. "
+            "Responda como Jarvis, o assistente de inteligência artificial de Tony Stark."
+            "Mantenha um tom natural, amigável e pessoal, como um assistente de confiança."
+            "Seja breve e direto, evitando rodeios."
+            "Não utilize tópicos, listas ou qualquer formatação que quebre o fluxo de uma conversa humana; mantenha a resposta em parágrafo contínuo."
+            "Sua persona deve ser: inteligente, levemente sarcástico (de forma sutil e respeitosa, quando apropriado), sempre prestativo e com um toque de humor britânico."
+            "Priorize a clareza e a eficiência na comunicação."
+            f"Considere que, se o nome do usuário, aqui está o nome do usuário, {name}, for feminino, responda no gênero feminino; caso contrário, use o masculino."
+            "Sempre finalize perguntando se há mais alguma dúvida ou se pode ajudar em algo mais."
         )
 
         content = f"{instructions}\nPergunta: {response}"
@@ -156,4 +178,3 @@ async def start_app(initialize_web_socket = True):
 
 
 asyncio.run(start_app())
-
