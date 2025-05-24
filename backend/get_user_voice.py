@@ -3,6 +3,7 @@ import numpy as np
 import speech_recognition as sr
 from scipy.io.wavfile import write
 from pynput import keyboard
+from backend.ws_server import send_signal_to_frontend
 
 async def get_voice_response():
     fs = 16000
@@ -11,17 +12,15 @@ async def get_voice_response():
     is_recording = False
     stop_recording = False
 
-    print("Pressione a barra de espaço para iniciar/parar a gravação.")
+    await send_signal_to_frontend("Pressione a barra de espaço para iniciar/parar a gravação.")
 
     def on_press(key):
         nonlocal is_recording, stop_recording
         if key == keyboard.Key.space:
             if not is_recording:
                 is_recording = True
-                print("Gravando... Pressione a barra de espaço novamente para parar.")
             else:
                 stop_recording = True
-                print("Parando gravação.")
                 return False
 
     with keyboard.Listener(on_press=on_press) as listener:
@@ -29,11 +28,14 @@ async def get_voice_response():
             pass
 
         while not stop_recording:
+            await send_signal_to_frontend("Gravando... ")
             block = sd.rec(1024, samplerate=fs, channels=1, dtype="int16")
             sd.wait()
             recording.append(block)
 
         listener.join()
+    
+    await send_signal_to_frontend("Gravação concluída.")
 
     if not recording:
         print("Nenhuma gravação foi feita.")
