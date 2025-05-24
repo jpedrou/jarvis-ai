@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jarvis</title>
 
-    <link rel="shortcut icon" href="assets/img/logo.ico" type="image/x-icon" />
+    <!-- <link rel="shortcut icon" href="assets/img/logo.ico" type="image/x-icon" /> -->
 
     <!-- Bootsrap -->
     <link
@@ -41,6 +41,22 @@
         </div>
         <div class="col-md-1"></div>
       </div>
+      <div
+        id="message-container"
+        style="
+          height: 200px;
+          overflow-y: auto;
+          margin: -50px auto 50px auto;
+          color: white;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          font-size: 50px;
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+          text-align: center;
+          padding: 10px;
+        "
+      ></div>
     </section>
 
     <!-- Bootstrap -->
@@ -50,5 +66,6 @@
       crossorigin="anonymous"
     ></script>
     <script src="globe.js"></script>
+    <script src="notification.js"></script>
   </body>
 </html>

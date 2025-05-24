@@ -99,6 +99,11 @@ canvas {
     animation: animate3 8s linear infinite;
 }
 
+#message-container::-webkit-scrollbar {
+  display: none;
+}
+
+
 @keyframes animate1 {
     0% {
         transform: rotate(0deg);
@@ -129,3 +134,4 @@ canvas {
 @keyframes spin {
     100% { transform: rotate(360deg); }
 }
+
