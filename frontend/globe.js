@@ -9,11 +9,10 @@ class Globe {
         this.centerY = this.canvas.height / 2;
         this.radius = 80;
         
-        // Cores futuristas
         this.colors = {
-            particle: '255, 255, 255',      // Branco brilhante
-            connection: '255, 255, 255',     // Linhas de conexão
-            pulse: '200, 200, 200'          // Pulso mais suave
+            particle: '255, 255, 255',
+            connection: '255, 255, 255',
+            pulse: '200, 200, 200'
         };
         
         this.init();
@@ -21,7 +20,6 @@ class Globe {
     }
 
     init() {
-        // Criar partículas
         for (let i = 0; i < this.numParticles; i++) {
             const theta = Math.random() * 2 * Math.PI;
             const phi = Math.random() * Math.PI;
@@ -38,7 +36,6 @@ class Globe {
     }
 
     drawConnections() {
-        // Desenhar conexões entre partículas próximas
         for (let i = 0; i < this.particles.length; i++) {
             for (let j = i + 1; j < this.particles.length; j++) {
                 const dx = this.particles[i].x - this.particles[j].x;
@@ -67,27 +64,21 @@ class Globe {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Atualizar e desenhar partículas
         for (let particle of this.particles) {
-            // Rotação
             const x = particle.x;
             const z = particle.z;
             particle.x = x * Math.cos(particle.speed) - z * Math.sin(particle.speed);
             particle.z = z * Math.cos(particle.speed) + x * Math.sin(particle.speed);
             
-            // Projeção 2D
             const scale = 200 / (200 + particle.z);
             particle.x2d = particle.x * scale + this.centerX;
             particle.y2d = particle.y * scale + this.centerY;
             
-            // Efeito de pulso
             particle.pulse += 0.05;
             const pulseSize = particle.size + Math.sin(particle.pulse) * 1;
             
-            // Desenhar partícula com brilho
             const alpha = ((particle.z + this.radius) / (2 * this.radius)) * 0.8 + 0.2;
             
-            // Efeito de brilho
             const gradient = this.ctx.createRadialGradient(
                 particle.x2d, particle.y2d, 0,
                 particle.x2d, particle.y2d, pulseSize * 2
@@ -110,7 +101,6 @@ class Globe {
     }
 }
 
-// Inicializar o globo
 document.addEventListener('DOMContentLoaded', () => {
     new Globe();
 });
