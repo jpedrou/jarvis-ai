@@ -22,7 +22,11 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 client = genai.Client(api_key=GOOGLE_API_KEY)
 
 
-async def start_app():
+async def start_app(initialize_web_socket = True):
+    if initialize_web_socket:
+        ws_process = threading.Thread(target=start_ws_server, daemon=True)
+        ws_process.start()
+
     current_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = f"file://{current_dir}/frontend/index.html"
 
@@ -41,8 +45,13 @@ async def start_app():
     while attempts < max_atempts:
         await say("Podemos prosseguir ?")
         response = await get_voice_response()
-        if response and any(
-            word in response.lower() for word in ["sim", "claro", "ok", "vamos", "pode"]
+        if (
+            response
+            and any(
+                word in response.lower()
+                for word in ["sim", "claro", "ok", "vamos", "pode"]
+            )
+            and "não" not in response.lower()
         ):
             await say("Ótimo. Vamos lá.")
             await say("Tente centralizar seu rosto na tela")
@@ -92,7 +101,7 @@ async def start_app():
                 "Que pena! Não poderei te ajudar. Somente pessoas autorizadas podem acessar meu conhecimento."
             )
             await say("Desligando sistema!")
-            await asyncio.sleep(2)
+            await asyncio.sleep(1)
             os.killpg(os.getpgid(browser_process.pid), signal.SIGTERM)
             sys.exit(0)
 
@@ -124,11 +133,17 @@ async def start_app():
             os.killpg(os.getpgid(browser_process.pid), signal.SIGTERM)
             sys.exit(0)
 
+        if "reiniciar" in response.lower():
+            await say("Reiniciando sistema")
+            await asyncio.sleep(2)
+            os.killpg(os.getpgid(browser_process.pid), signal.SIGTERM)
+            start_app()
+
         instructions = (
-            f"Considere que, se {name} for um nome feminino, responda no gênero feminino; caso contrário, use o masculino. "
             "Responda como Jarvis, o assistente de inteligência artificial do Homem de Ferro: breve, direto, humano e com um tom natural e amigável, como um assistente pessoal. "
             "Evite usar tópicos ou listas. "
             "Sempre finalize perguntando se há mais alguma dúvida ou se posso ajudar em algo mais."
+            f"Considere que, se {name} for um nome feminino, responda no gênero feminino; caso contrário, use o masculino. "
         )
 
         content = f"{instructions}\nPergunta: {response}"
@@ -140,11 +155,5 @@ async def start_app():
         await say(model_response.text)
 
 
-if __name__ == "__main__":
-    ws_process = threading.Thread(target=start_ws_server, daemon=True)
-    ws_process.start()
+asyncio.run(start_app())
 
-    try:
-        asyncio.run(start_app())
-    finally:
-        pass
