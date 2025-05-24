@@ -1,7 +1,11 @@
 import sqlite3
 import numpy as np
+import os
+from dotenv import load_dotenv
 
-DB_PATH = "/home/joao/Desktop/facial-agent/backend/data/clients.db"
+load_dotenv()
+
+DB_PATH = os.getenv("DB_PATH")
 
 
 def insert_client(name, age, image_representation):
