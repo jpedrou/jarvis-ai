@@ -4,6 +4,7 @@ import pygame
 import os
 import numpy as np
 import soundfile as sf
+from backend.ws_server import send_signal_to_frontend
 
 async def speak_jarvis(text):
     try:
@@ -38,5 +39,7 @@ async def speak_jarvis(text):
 async def say(text, first_message=False):
     if first_message:
         text = f"Olá, eu sou o Járvis"
- 
+
+    await send_signal_to_frontend(text)
     await speak_jarvis(text)
+    
