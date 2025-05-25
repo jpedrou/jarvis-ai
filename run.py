@@ -98,8 +98,8 @@ async def start_app(initialize_web_socket=True):
                         await say("E sua idade?")
                         age = await get_voice_response()
                         if age:
-                            match = re.search(r"d+", age)
-                            age = int(match.group()) if match else None
+                            match = re.search(r"(\d+)(?:\s*anos)?", age)
+                            age = int(match.group(1)) if match else None
                         insert_client(name, age, face.tobytes())
                         await say(
                             f"Cadastro realizado com sucesso! Agora você pode acessar meus conhecimentos, {name}!"
