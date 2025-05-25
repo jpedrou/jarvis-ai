@@ -6,11 +6,16 @@ An AI assistant inspired by Iron Man’s JARVIS, equipped with facial recognitio
 
 ## Technologies
 
-<img src="https://img.icons8.com/?size=100&id=17949&format=png&color=000000" width="75"/>
-<img src="https://img.icons8.com/?size=100&id=22989&format=png&color=000000" width="75"/>
-<img src="https://img.icons8.com/?size=100&id=13441&format=png&color=000000" width="75"/>
-<img src="https://img.icons8.com/?size=100&id=laVIsJnTtYoj&format=png&color=000000" width="75"/>
-<img src="https://img.icons8.com/?size=100&id=20909&format=png&color=000000" width="75"/>
-<img src="https://img.icons8.com/?size=100&id=21278&format=png&color=000000" width="75"/>
+<div style="display: flex; gap: 10px; align-items: center;">
+    <img src="https://img.icons8.com/?size=100&id=17949&format=png&color=000000" width="75"/>
+    <img src="https://img.icons8.com/?size=100&id=22989&format=png&color=000000" width="75"/>
+    <img src="https://img.icons8.com/?size=100&id=13441&format=png&color=000000" width="75"/>
+    <img src="https://img.icons8.com/?size=100&id=laVIsJnTtYoj&format=png&color=000000" width="75"/>
+    <img src="https://img.icons8.com/?size=100&id=20909&format=png&color=000000" width="75"/>
+    <img src="https://img.icons8.com/?size=100&id=21278&format=png&color=000000" width="75"/>
+</div>
+
+## Running
+
 
 
